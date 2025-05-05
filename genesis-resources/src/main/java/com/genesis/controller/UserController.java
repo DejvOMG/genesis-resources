@@ -19,26 +19,26 @@ public class UserController {
         this.service = service;
     }
 
-    // POST - založení nového uživatele
+
     @PostMapping
     public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserCreateDto dto) {
         return ResponseEntity.ok(service.create(dto));
     }
 
-    // GET - získání všech uživatelů (s parametrem detail)
+
     @GetMapping
     public ResponseEntity<List<UserDto>> getAll(@RequestParam(defaultValue = "false") boolean detail) {
         return ResponseEntity.ok(service.getAll(detail));
     }
 
-    // GET - získání jednoho uživatele (s parametrem detail)
+
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getOne(@PathVariable Long id,
                                           @RequestParam(defaultValue = "false") boolean detail) {
         return ResponseEntity.ok(service.getOne(id, detail));
     }
 
-    // DELETE - smazání uživatele
+    
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
