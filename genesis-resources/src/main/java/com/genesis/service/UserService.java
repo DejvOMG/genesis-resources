@@ -1,90 +1,71 @@
 package com.genesis.service;
 
-import com.genesis.dto.UserCreateDto;
-import com.genesis.dto.UserDto;
+import com.genesis.dto.UserCreateDTO;
+import com.genesis.dto.UserDTO;
 import com.genesis.exception.InvalidPersonIdException;
 import com.genesis.exception.PersonIdAlreadyExistsException;
 import com.genesis.exception.UserNotFoundException;
+import com.genesis.mapper.UserMapper;
 import com.genesis.model.User;
 import com.genesis.repository.UserRepository;
+import com.genesis.validator.PersonIdValidator;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.Scanner;
-import java.util.Set;
-import java.util.HashSet;
-import java.io.InputStream;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
-    private final UserRepository repository;
-    private final Set<String> validPersonIds = new HashSet<>();
+    private final UserRepository userRepository;
+    private final PersonIdValidator personIdValidator;
+    private final UserMapper userMapper;
 
-    public UserService(UserRepository repository) {
-        this.repository = repository;
-        loadValidPersonIds();
-    }
-
-    private void loadValidPersonIds() {
-        try (InputStream input = getClass().getClassLoader().getResourceAsStream("dataPersonId.txt");
-             Scanner scanner = new Scanner(input)) {
-            while (scanner.hasNextLine()) {
-                validPersonIds.add(scanner.nextLine().trim());
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Unable to load dataPersonId.txt", e);
-        }
-    }
-
-    public UserDto create(UserCreateDto dto) {
-        if (!validPersonIds.contains(dto.getPersonId())) {
-            throw new InvalidPersonIdException("Person ID is not valid: " + dto.getPersonId());
+    public UserDTO createUser(UserCreateDTO userCreateDTO) {
+        if (!personIdValidator.isValid(userCreateDTO.getPersonId())) {
+            throw new InvalidPersonIdException("Invalid person ID.");
         }
 
-        if (repository.findByPersonId(dto.getPersonId()).isPresent()) {
-            throw new PersonIdAlreadyExistsException("Person ID already exists: " + dto.getPersonId());
+        if (userRepository.existsByPersonId(userCreateDTO.getPersonId())) {
+            throw new PersonIdAlreadyExistsException("Person ID already exists.");
         }
 
-        User user = User.builder()
-                .name(dto.getName())
-                .surname(dto.getSurname())
-                .personId(dto.getPersonId())
-                .uuid(UUID.randomUUID().toString())
-                .build();
+        User user = userMapper.fromCreateDto(userCreateDTO);
+        user.setUuid(UUID.randomUUID().toString());
 
-        return UserDto.fromEntity(repository.save(user));
+        return userMapper.toDto(userRepository.save(user));
     }
 
-    public List<UserDto> getAll(boolean detail) {
-        return repository.findAll().stream()
-                .map(user -> UserDto.fromEntity(user, detail))
+    public List<UserDTO> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(userMapper::toDto)
                 .collect(Collectors.toList());
     }
 
-    public UserDto getOne(Long id, boolean detail) {
-        User user = repository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User with ID " + id + " not found"));
-        return UserDto.fromEntity(user, detail);
+    public UserDTO getUserById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found."));
+        return userMapper.toDto(user);
     }
 
-    public UserDto update(Long id, UserCreateDto dto) {
-        User user = repository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User with ID " + id + " not found"));
+    public UserDTO updateUser(UserDTO userDTO) {
+        User user = userRepository.findById(userDTO.getId())
+                .orElseThrow(() -> new UserNotFoundException("User not found."));
 
-        user.setName(dto.getName());
-        user.setSurname(dto.getSurname());
-        user.setPersonId(dto.getPersonId());
+        user.setName(userDTO.getName());
+        user.setEmail(userDTO.getEmail());
+        user.setAge(userDTO.getAge());
 
-        return UserDto.fromEntity(repository.save(user));
+        return userMapper.toDto(userRepository.save(user));
     }
 
-    public void delete(Long id) {
-        if (!repository.existsById(id)) {
-            throw new UserNotFoundException("User with ID " + id + " not found");
+    public void deleteUser(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new UserNotFoundException("User not found.");
         }
-        repository.deleteById(id);
+        userRepository.deleteById(id);
     }
 }

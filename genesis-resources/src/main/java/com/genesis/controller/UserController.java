@@ -1,49 +1,45 @@
 package com.genesis.controller;
 
-import com.genesis.dto.UserCreateDto;
-import com.genesis.dto.UserDto;
 import com.genesis.service.UserService;
+import com.genesis.dto.UserDTO;
+import com.genesis.dto.UserCreateDTO;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/users")
+@RequiredArgsConstructor
 public class UserController {
 
-    private final UserService service;
-
-    public UserController(UserService service) {
-        this.service = service;
-    }
+    private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserCreateDto dto) {
-        return ResponseEntity.status(201).body(service.create(dto));
+    public ResponseEntity<UserDTO> createUser(@RequestBody @Valid UserCreateDTO userCreateDTO) {
+        return ResponseEntity.ok(userService.createUser(userCreateDTO));
     }
 
     @GetMapping
-    public ResponseEntity<List<UserDto>> getAll(@RequestParam(defaultValue = "false") boolean detail) {
-        return ResponseEntity.ok(service.getAll(detail));
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDto> getOne(@PathVariable Long id,
-                                          @RequestParam(defaultValue = "false") boolean detail) {
-        return ResponseEntity.ok(service.getOne(id, detail));
+    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getUserById(id));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<UserDto> updateUser(@PathVariable Long id,
-                                              @Valid @RequestBody UserCreateDto dto) {
-        return ResponseEntity.ok(service.update(id, dto));
+    @PutMapping
+    public ResponseEntity<UserDTO> updateUser(@RequestBody @Valid UserDTO userDTO) {
+        return ResponseEntity.ok(userService.updateUser(userDTO));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        service.delete(id);
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
 }
