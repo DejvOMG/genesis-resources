@@ -1,8 +1,9 @@
 package com.genesis.controller;
 
-import com.genesis.service.UserService;
-import com.genesis.dto.UserDTO;
 import com.genesis.dto.UserCreateDTO;
+import com.genesis.dto.BasicUserDTO;
+import com.genesis.dto.DetailedUserDTO;
+import com.genesis.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,22 +19,26 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<UserDTO> createUser(@RequestBody @Valid UserCreateDTO userCreateDTO) {
+    public ResponseEntity<DetailedUserDTO> createUser(@RequestBody @Valid UserCreateDTO userCreateDTO) {
         return ResponseEntity.ok(userService.createUser(userCreateDTO));
     }
 
     @GetMapping
-    public ResponseEntity<List<UserDTO>> getAllUsers() {
+    public ResponseEntity<List<BasicUserDTO>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.getUserById(id));
+    public ResponseEntity<?> getUserById(@PathVariable Long id, @RequestParam(value = "detail", defaultValue = "false") boolean detail) {
+        if (detail) {
+            return ResponseEntity.ok(userService.getDetailedUserById(id));
+        } else {
+            return ResponseEntity.ok(userService.getBasicUserById(id));
+        }
     }
 
     @PutMapping
-    public ResponseEntity<UserDTO> updateUser(@RequestBody @Valid UserDTO userDTO) {
+    public ResponseEntity<DetailedUserDTO> updateUser(@RequestBody @Valid DetailedUserDTO userDTO) {
         return ResponseEntity.ok(userService.updateUser(userDTO));
     }
 

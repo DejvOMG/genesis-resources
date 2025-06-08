@@ -4,24 +4,31 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
 @Entity
 @Table(name = "users")
+@Getter
+@Setter
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
+    private String surname;
+
     @Column(nullable = false, unique = true)
     private String personId;
 
+    @Column(nullable = false, unique = true)
     private String uuid;
 
-    private String name;
-
+    @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false)
     private Integer age;
 }

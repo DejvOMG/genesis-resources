@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "e7295158-9626-4921-8bab-2677e4d489f4",
+		"_postman_id": "6f9add6b-abb9-4634-8bb5-3d9c90bc9b05",
 		"name": "Genesis Resources API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "44763782",
-		"_collection_link": "https://david-8401550.postman.co/workspace/David's-Workspace~23ed2eae-5120-4444-83a8-d36cbcae7a97/collection/44763782-e7295158-9626-4921-8bab-2677e4d489f4?action=share&source=collection_link&creator=44763782"
+		"_collection_link": "https://david-8401550.postman.co/workspace/David's-Workspace~23ed2eae-5120-4444-83a8-d36cbcae7a97/collection/44763782-6f9add6b-abb9-4634-8bb5-3d9c90bc9b05?action=share&source=collection_link&creator=44763782"
 	},
 	"item": [
 		{
@@ -19,7 +19,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"personId\": \"jXa4g3H7oPq2\",\n    \"name\": \"Testovac\\u00ed U\\u017eivatel\",\n    \"email\": \"test@email.cz\",\n    \"age\": 25\n}"
+					"raw": "{\n  \"personId\": \"abc123\",\n  \"name\": \"Test\",\n  \"surname\": \"User\",\n  \"email\": \"test@example.com\",\n  \"age\": 30\n}"
 				},
 				"url": {
 					"raw": "http://localhost:8080/api/users",
@@ -57,12 +57,12 @@
 			"response": []
 		},
 		{
-			"name": "Get User By ID",
+			"name": "Get User By ID - Basic",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/users/1",
+					"raw": "http://localhost:8080/api/users/1?detail=false",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -72,6 +72,39 @@
 						"api",
 						"users",
 						"1"
+					],
+					"query": [
+						{
+							"key": "detail",
+							"value": "false"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User By ID - Detailed",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/users/1?detail=true",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users",
+						"1"
+					],
+					"query": [
+						{
+							"key": "detail",
+							"value": "true"
+						}
 					]
 				}
 			},
@@ -89,7 +122,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"id\": 1,\n    \"personId\": \"jXa4g3H7oPq2\",\n    \"uuid\": \"ignored\",\n    \"name\": \"Upraven\\u00e9 jm\\u00e9no\",\n    \"email\": \"upraveny@email.cz\",\n    \"age\": 30\n}"
+					"raw": "{\n  \"id\": 1,\n  \"name\": \"Updated\",\n  \"surname\": \"User\",\n  \"email\": \"updated@example.com\",\n  \"age\": 35\n}"
 				},
 				"url": {
 					"raw": "http://localhost:8080/api/users",
