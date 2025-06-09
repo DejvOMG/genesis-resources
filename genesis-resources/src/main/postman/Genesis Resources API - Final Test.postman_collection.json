@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "6f9add6b-abb9-4634-8bb5-3d9c90bc9b05",
-		"name": "Genesis Resources API",
+		"_postman_id": "4c7585ea-7e05-416d-9dfb-0328a1a7d188",
+		"name": "Genesis Resources API - Final Test",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "44763782",
-		"_collection_link": "https://david-8401550.postman.co/workspace/David's-Workspace~23ed2eae-5120-4444-83a8-d36cbcae7a97/collection/44763782-6f9add6b-abb9-4634-8bb5-3d9c90bc9b05?action=share&source=collection_link&creator=44763782"
+		"_collection_link": "https://david-8401550.postman.co/workspace/David's-Workspace~23ed2eae-5120-4444-83a8-d36cbcae7a97/collection/44763782-4c7585ea-7e05-416d-9dfb-0328a1a7d188?action=share&source=collection_link&creator=44763782"
 	},
 	"item": [
 		{
@@ -19,10 +19,10 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"personId\": \"abc123\",\n  \"name\": \"Test\",\n  \"surname\": \"User\",\n  \"email\": \"test@example.com\",\n  \"age\": 30\n}"
+					"raw": "{\n  \"name\": \"David\",\n  \"surname\": \"Tester\",\n  \"email\": \"test@email.com\",\n  \"personId\": \"abc123\",\n  \"age\": 25\n}"
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/users",
+					"raw": "http://localhost:8080/api/v1/users",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -30,6 +30,7 @@
 					"port": "8080",
 					"path": [
 						"api",
+						"v1",
 						"users"
 					]
 				}
@@ -37,12 +38,12 @@
 			"response": []
 		},
 		{
-			"name": "Get All Users",
+			"name": "Get All Users - Basic",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/users",
+					"raw": "http://localhost:8080/api/v1/users",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -50,7 +51,35 @@
 					"port": "8080",
 					"path": [
 						"api",
+						"v1",
 						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Users - Detailed",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/users?detail=true",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"users"
+					],
+					"query": [
+						{
+							"key": "detail",
+							"value": "true"
+						}
 					]
 				}
 			},
@@ -62,7 +91,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/users/1?detail=false",
+					"raw": "http://localhost:8080/api/v1/users/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -70,14 +99,9 @@
 					"port": "8080",
 					"path": [
 						"api",
+						"v1",
 						"users",
 						"1"
-					],
-					"query": [
-						{
-							"key": "detail",
-							"value": "false"
-						}
 					]
 				}
 			},
@@ -89,7 +113,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/users/1?detail=true",
+					"raw": "http://localhost:8080/api/v1/users/1?detail=true",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -97,6 +121,7 @@
 					"port": "8080",
 					"path": [
 						"api",
+						"v1",
 						"users",
 						"1"
 					],
@@ -122,10 +147,10 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"id\": 1,\n  \"name\": \"Updated\",\n  \"surname\": \"User\",\n  \"email\": \"updated@example.com\",\n  \"age\": 35\n}"
+					"raw": "{\n  \"id\": 1,\n  \"name\": \"David Updated\",\n  \"surname\": \"Tester Updated\",\n  \"personId\": \"abc123\",\n  \"email\": \"updated@email.com\",\n  \"uuid\": \"some-uuid\"\n}"
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/users",
+					"raw": "http://localhost:8080/api/v1/users",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -133,6 +158,7 @@
 					"port": "8080",
 					"path": [
 						"api",
+						"v1",
 						"users"
 					]
 				}
@@ -145,7 +171,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/users/1",
+					"raw": "http://localhost:8080/api/v1/users/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -153,6 +179,7 @@
 					"port": "8080",
 					"path": [
 						"api",
+						"v1",
 						"users",
 						"1"
 					]

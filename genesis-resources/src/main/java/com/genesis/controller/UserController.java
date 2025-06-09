@@ -1,8 +1,8 @@
 package com.genesis.controller;
 
-import com.genesis.dto.UserCreateDTO;
 import com.genesis.dto.BasicUserDTO;
 import com.genesis.dto.DetailedUserDTO;
+import com.genesis.dto.UserCreateDTO;
 import com.genesis.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -24,12 +24,16 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<BasicUserDTO>> getAllUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
+    public ResponseEntity<List<?>> getAllUsers(@RequestParam(defaultValue = "false") boolean detail) {
+        if (detail) {
+            return ResponseEntity.ok(userService.getAllDetailedUsers());
+        } else {
+            return ResponseEntity.ok(userService.getAllBasicUsers());
+        }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getUserById(@PathVariable Long id, @RequestParam(value = "detail", defaultValue = "false") boolean detail) {
+    public ResponseEntity<?> getUserById(@PathVariable Long id, @RequestParam(defaultValue = "false") boolean detail) {
         if (detail) {
             return ResponseEntity.ok(userService.getDetailedUserById(id));
         } else {
@@ -38,8 +42,8 @@ public class UserController {
     }
 
     @PutMapping
-    public ResponseEntity<DetailedUserDTO> updateUser(@RequestBody @Valid DetailedUserDTO userDTO) {
-        return ResponseEntity.ok(userService.updateUser(userDTO));
+    public ResponseEntity<DetailedUserDTO> updateUser(@RequestBody @Valid DetailedUserDTO dto) {
+        return ResponseEntity.ok(userService.updateUser(dto));
     }
 
     @DeleteMapping("/{id}")
