@@ -8,11 +8,13 @@ import com.genesis.exception.UserNotFoundException;
 import com.genesis.mapper.UserMapper;
 import com.genesis.model.User;
 import com.genesis.repository.UserRepository;
+import com.genesis.validator.PersonIdValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,8 +22,10 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PersonIdValidator personIdValidator;
 
     public DetailedUserDTO createUser(UserCreateDTO dto) {
+        personIdValidator.validate(dto.getPersonId());
         if (userRepository.existsByPersonId(dto.getPersonId())) {
             throw new PersonIdAlreadyExistsException("PersonId already exists");
         }
@@ -31,18 +35,18 @@ public class UserService {
         return userMapper.toDetailedDto(user);
     }
 
+
     public List<BasicUserDTO> getAllBasicUsers() {
-        return userRepository.findAll()
-                .stream()
+        return userRepository.findAll().stream()
                 .map(userMapper::toBasicDto)
-                .toList();
+                .collect(Collectors.toList());
     }
 
+
     public List<DetailedUserDTO> getAllDetailedUsers() {
-        return userRepository.findAll()
-                .stream()
+        return userRepository.findAll().stream()
                 .map(userMapper::toDetailedDto)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     public BasicUserDTO getBasicUserById(Long id) {
@@ -60,14 +64,10 @@ public class UserService {
     public DetailedUserDTO updateUser(DetailedUserDTO dto) {
         User user = userRepository.findById(dto.getId())
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
-
         user.setName(dto.getName());
         user.setSurname(dto.getSurname());
-        user.setPersonId(dto.getPersonId());
         user.setEmail(dto.getEmail());
-
-        user = userRepository.save(user);
-        return userMapper.toDetailedDto(user);
+        return userMapper.toDetailedDto(userRepository.save(user));
     }
 
     public void deleteUser(Long id) {

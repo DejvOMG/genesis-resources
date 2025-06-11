@@ -19,26 +19,24 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<DetailedUserDTO> createUser(@RequestBody @Valid UserCreateDTO userCreateDTO) {
-        return ResponseEntity.ok(userService.createUser(userCreateDTO));
+    public ResponseEntity<DetailedUserDTO> createUser(@RequestBody @Valid UserCreateDTO dto) {
+        return ResponseEntity.ok(userService.createUser(dto));
     }
 
     @GetMapping
     public ResponseEntity<List<?>> getAllUsers(@RequestParam(defaultValue = "false") boolean detail) {
-        if (detail) {
-            return ResponseEntity.ok(userService.getAllDetailedUsers());
-        } else {
-            return ResponseEntity.ok(userService.getAllBasicUsers());
-        }
+        return detail
+                ? ResponseEntity.ok(userService.getAllDetailedUsers())
+                : ResponseEntity.ok(userService.getAllBasicUsers());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getUserById(@PathVariable Long id, @RequestParam(defaultValue = "false") boolean detail) {
-        if (detail) {
-            return ResponseEntity.ok(userService.getDetailedUserById(id));
-        } else {
-            return ResponseEntity.ok(userService.getBasicUserById(id));
-        }
+    public ResponseEntity<?> getUserById(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "false") boolean detail) {
+        return detail
+                ? ResponseEntity.ok(userService.getDetailedUserById(id))
+                : ResponseEntity.ok(userService.getBasicUserById(id));
     }
 
     @PutMapping
